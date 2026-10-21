@@ -8,32 +8,62 @@
 <meta http-equiv="Expires" content="0">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#2563eb">
-<title>Ablauf-Assistent – deaktiviert</title>
+<title>Ablauf-Assistent – kurz offline</title>
 <style>
-:root{--bg:#eaeff7;--bg2:#e3e9f4;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e5eaf1;--brand:#2563eb}
-@media (prefers-color-scheme:dark){:root{--bg:#0a0f1c;--bg2:#0d1424;--card:#151d2e;--text:#e8edf7;--muted:#93a1b8;--border:#28324a;--brand:#60a5fa}}
+:root{--bg:#eaeff7;--bg2:#e3e9f4;--card:#ffffff;--text:#0f172a;--muted:#64748b;--border:#e5eaf1;--brand:#2563eb;--brand-ink:#1e3a8a;
+ --grad:linear-gradient(135deg,#3b82f6 0%,#4f46e5 100%)}
+@media (prefers-color-scheme:dark){:root{--bg:#0a0f1c;--bg2:#0d1424;--card:#151d2e;--text:#e8edf7;--muted:#93a1b8;--border:#28324a;--brand:#60a5fa;--brand-ink:#bfdbfe;
+ --grad:linear-gradient(135deg,#3b82f6 0%,#6366f1 100%)}}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--text);
  background:linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%)}
-.card{background:var(--card);max-width:440px;width:100%;border:1px solid var(--border);border-radius:20px;
- padding:34px 28px;text-align:center;box-shadow:0 16px 44px rgba(15,23,42,.16)}
-.ic{font-size:46px;line-height:1}
-h1{font-size:20px;font-weight:750;margin:16px 0 8px;letter-spacing:-.01em}
-p{color:var(--muted);font-size:14.5px;line-height:1.55;margin:8px 0}
-.foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
+.card{background:var(--card);max-width:460px;width:100%;border:1px solid var(--border);border-radius:22px;
+ padding:34px 28px 28px;text-align:center;box-shadow:0 16px 44px rgba(15,23,42,.16)}
+.ic{font-size:52px;line-height:1;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
+@media (prefers-reduced-motion:reduce){.ic{animation:none}}
+h1{font-size:20px;font-weight:750;margin:14px 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.joke{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 16px;min-height:88px;
+ display:flex;align-items:center;justify-content:center;font-size:15px;line-height:1.5;font-weight:550}
+.btn{margin-top:14px;border:none;border-radius:14px;padding:11px 18px;font-size:14px;font-weight:700;color:#fff;
+ background:var(--grad);cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,.3);transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(.96)}
+.note{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.5}
+.foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="card">
-<div class="ic">🔌</div>
-<h1>Ablauf-Assistent vorübergehend deaktiviert</h1>
-<p>Der Assistent steht derzeit nicht zur Verfügung.</p>
-<p>Bei Fragen wende dich bitte an den zuständigen Ansprechpartner.</p>
+<div class="ic">🛋️</div>
+<h1>Der Ablauf-Assistent macht gerade Pause</h1>
+<p class="sub">(ganz offiziell: vorübergehend deaktiviert)</p>
+<div class="joke" id="joke">…</div>
+<button class="btn" type="button" onclick="roll()">🎲 Noch ein Spruch</button>
+<p class="note">Komm später einfach nochmal vorbei. Bei Fragen wende dich bitte an den zuständigen Ansprechpartner.</p>
 <div class="foot">Bot &amp; Software © 2026 Karl Opelt</div>
 </div>
 <script>
+var LINES=[
+ "Der Assistent ist kurz in der Abstellkammer verschwunden – Herd, Spüle, Einbauküche… man weiß ja nie. 🧰",
+ "Gerade Kaffeepause ☕ – er rechnet heimlich noch am Mietspiegel.",
+ "Unbefristeter Mietvertrag, versteht sich – der Bot gönnt sich eine Auszeit. 👻",
+ "404½ – Assistent vorübergehend ausgezogen. Nachsendeauftrag läuft. 📦",
+ "Er sortiert gerade seine Mappen nach Farbe. Das dauert. 🟢🟡🔴",
+ "Offline – wie eine Besichtigung ohne Termin.",
+ "Liegt gerade auf der Couch und wartet auf die Zustimmung zur Mieterhöhung. 🛋️",
+ "Kurz beim Eigentümer – erklärt, wie der Wert zustande kommt. 📊",
+ "Der Fahrstuhl des Assistenten hat zu viele Höhen und Tiefen. Wartung läuft. 🛗",
+ "Macht Inventur im Schlüsselkasten. Bitte nicht klingeln. 🔑",
+ "Steht noch in der Wiedervorlage – kommt gleich wieder. 🗂️",
+ "Provisionsfrei pausiert – das schönste Wort der Immobilienbranche. 🤝"
+];
+var last=-1;
+function roll(){var i;do{i=Math.floor(Math.random()*LINES.length);}while(i===last&&LINES.length>1);last=i;document.getElementById('joke').textContent=LINES[i];}
+roll();
 /* Service Worker abmelden und alle Caches leeren, damit auch installierte /
    offline zwischengespeicherte Versionen auf dem Gerät deaktiviert werden. */
 try{if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){try{r.unregister();}catch(e){}});}).catch(function(){});}}catch(e){}
